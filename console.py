@@ -1,10 +1,18 @@
+"""
+File: console.py
+Author: theMaskedOtaku
+Email: otakuS3nnin@gmail.com
+Github: https://github.com/Funkycodes
+Description: 
+"""
 import cmd
-import os
 
 
 class HBNBCommand(cmd.Cmd):
 
-    """Docstring for HBNBCommand. """
+    """Main component of the console.
+    Extends cmd.Cmd class.
+    """
 
     prompt = "(hbnb) "
 
@@ -23,7 +31,7 @@ class HBNBCommand(cmd.Cmd):
     def do_EOF(self, line):
         """
         End Of File indicator for program, quits the program with void return\
-    value
+ value
         """
         return True
 
@@ -35,6 +43,4 @@ class HBNBCommand(cmd.Cmd):
 
 
 if __name__ == "__main__":
-    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-    print(ROOT_DIR)
     HBNBCommand().cmdloop()

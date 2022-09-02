@@ -1,10 +1,3 @@
-from datetime import datetime as dt
-import uuid
-import sys
-import os
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-import models
-
 """
 File: base_model.py
 Author: theMaskedOtaku
@@ -12,56 +5,79 @@ Email: yourname@email.com
 Github: https://github.com/Funkycodes
 Description: Contains BaseModel class that defines common attributes/methods \
 for other classes
+
+Methods:
+        __init__(): initializes class, sets the value of key instance\
+attributes.
+        save(): Save the instances of object to memory using the storage class
+        to_dict(): Returns dictionary representation of the class
+
 """
+
+from datetime import datetime as dt
+import uuid
+from models import storage
 
 
 class BaseModel(object):
 
-    """Docstring for BaseModel. """
+    """ for BaseModel.
+
+    Sets a template for other application classes and also defines core applic\
+    ation class methods
+    """
 
     def __init__(self, *args, **kwargs):
+
         """
         Init method
 
         Sets all the relevant instance attributes
         """
+
         if kwargs:
-            for k, v in kwargs.items():
-                if "__class__" == k:
+            for key, value in kwargs.items():
+                if "__class__" == key:
                     pass
-                elif "created_at" == k:
-                    self.created_at = dt.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
-                elif "updated_at" == k:
-                    self.updated_at = dt.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
+                elif "created_at" == key:
+                    self.created_at = dt.strptime(value,
+                                                  "%Y-%m-%dT%H:%M:%S.%f")
+                elif "updated_at" == key:
+                    self.updated_at = dt.strptime(value,
+                                                  "%Y-%m-%dT%H:%M:%S.%f")
                 else:
-                    setattr(self, k, v)
+                    setattr(self, key, value)
         else:
             self.id = str(uuid.uuid4())
             self.created_at = dt.now()
             self.updated_at = self.created_at
-            models.storage.new(self)
+            storage.new(self)
 
     def __str__(self):
-        print("[{}] ({}) <{}>".format(self.__class__.__name__, self.id,
-                                      self.__dict__))
+        """
+        Overrides and implements custom dunder method.
+        Prints the string representation of the instance
+        """
+        print("[{}] ({}) {}".format(
+            self.__class__.__name__,
+            self.id,
+            self.__dict__))
 
     def save(self):
-        """docstring for s"""
+        """Handles storage mechanism for BaseModel and all descendant classes
+        """
+
         self.updated_at = dt.now()
-        models.storage.save()
+        storage.save()
 
     def to_dict(self):
-        """docstringfor to_dict"""
+        """Returns the dictonary representation of the instance"""
+
         dict_repr = {}
-        dict_repr['__class__'] = self.__class__.__name__
-        for k, v in self.__dict__.items():
-            if isinstance(v, (dt, )):
-                dict_repr[k] = dt.isoformat(v)
+        dict_repr['__class__'] = self.__class__
+        for key, value in self.__dict__.items():
+            if isinstance(value, (dt, )):
+                dict_repr[key] = dt.isoformat(value)
             else:
-                dict_repr[k] = v
+                dict_repr[key] = value
         return dict_repr
-
-
-base1 = BaseModel()
-print(models.storage.all())
-base1.save()

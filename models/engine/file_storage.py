@@ -5,48 +5,15 @@ Email: otakuS3nnin@email.com
 Github: https://github.com/Funkycodes
 Description: Contains FileStorage class responsible for storage of instances
 """
+
 import json
-from datetime import datetime as dt
-import uuid
-
-
-class BaseModel(object):
-
-    """Docstring for BaseModel"""
-
-    def __init__(self, *args, **kwargs):
-        """
-        Init method
-
-        Sets all the relevant instance attributes
-        """
-        if kwargs:
-            for k, v in kwargs.items():
-                if "__class__" == k:
-                    pass
-                elif "created_at" == k:
-                    self.created_at = dt.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
-                elif "updated_at" == k:
-                    self.updated_at = dt.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
-                else:
-                    setattr(self, k, v)
-        else:
-            self.id = str(uuid.uuid4())
-            self.created_at = dt.now()
-            self.updated_at = self.created_at
-            storage.new(self)
-
-    def to_dict(self):
-        """docstring for to_dict"""
-
-        dict_repr = {}
-        dict_repr['__class__'] = self.__class__.__name__
-        for k, v in self.__dict__.items():
-            if isinstance(v, (dt, )):
-                dict_repr[k] = dt.isoformat(v)
-            else:
-                dict_repr[k] = v
-        return dict_repr
+from models.base_model import BaseModel
+from models.city import City
+from models.user import User
+from models.review import Review
+from models.place import Place
+from models.amenity import Amenity
+from models.state import State
 
 
 class FileStorage(object):
@@ -59,15 +26,24 @@ class FileStorage(object):
     __file_path = "file.json"
     __objects = {}
     class_dict = {
-        "BaseModel": BaseModel
+        "BaseModel": BaseModel,
+        "City": City,
+        "User": User,
+        "Review": Review,
+        "Place": Place,
+        "Amenity": Amenity,
+        "State": State
     }
 
     def __init__(self):
+        """Empty init method, empty because there are not instance attributes
+        to be defined
+        """
 
         pass
 
     def all(self):
-        """docstring for all"""
+        """Return dictionary containing all existing object instances"""
 
         return FileStorage.__objects
 
@@ -77,15 +53,18 @@ class FileStorage(object):
         """
 
         FileStorage.__objects["{}.{}".format(obj.__class__.__name__,
-            obj.id)] = obj.to_dict()
+                                             obj.id)] = obj
 
     def save(self):
         """
         Saves file to __file_path.json
         """
+        dict_repr = {}
+        for id, obj in FileStorage.__objects.items():
+            dict_repr[id] = obj.to_dict()
 
         with open(FileStorage.__file_path, 'w+', encoding='utf8') as file:
-            json.dump(FileStorage.__objects, file)
+            json.dump(dict_repr, file)
 
     def reload(self):
         """
@@ -100,13 +79,3 @@ class FileStorage(object):
                     self.new(obj)
         except FileNotFoundError:
             pass
-
-
-if __name__ == "__main__":
-    storage = FileStorage()
-    model1 = BaseModel()
-    storage.new(model1)
-    storage.save()
-    FileStorage.__objects = {}
-    storage.reload()
-    print(storage.all())

@@ -1,0 +1,18 @@
+Root_Dir
+|   console.py
+|   file.json
+|   file.txt
+|   __init__.py
+|   
+|
+----models
+    |   base_model.py
+    |   file.json
+    |   __init__.py
+    |   
+    +---engine
+           file.json
+           file_storage.py
+           __init__.py
+
+Question: I am having trouble importing BaseModel from models.base_model into engine/file_storage.py, it keeps saying models package is not found, I understand that this is due to the way python searches for modules by first checking the cwd and then the site packages, I have found a hack to deal with this 
