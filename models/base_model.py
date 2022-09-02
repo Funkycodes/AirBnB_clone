@@ -16,8 +16,7 @@ attributes.
 
 from datetime import datetime as dt
 import uuid
-from models import storage
-
+import models
 
 class BaseModel(object):
 
@@ -51,7 +50,7 @@ class BaseModel(object):
             self.id = str(uuid.uuid4())
             self.created_at = dt.now()
             self.updated_at = self.created_at
-            storage.new(self)
+            models.storage.new(self)
 
     def __str__(self):
         """
@@ -68,7 +67,7 @@ class BaseModel(object):
         """
 
         self.updated_at = dt.now()
-        storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """Returns the dictonary representation of the instance"""
