@@ -18,6 +18,7 @@ from datetime import datetime as dt
 import uuid
 import models
 
+
 class BaseModel(object):
 
     """ for BaseModel.
@@ -57,10 +58,17 @@ class BaseModel(object):
         Overrides and implements custom dunder method.
         Prints the string representation of the instance
         """
-        print("[{}] ({}) {}".format(
+
+        return ("[{}] ({}) {}".format(
             self.__class__.__name__,
             self.id,
             self.__dict__))
+
+    def __repr__(self):
+        """Returns string representation of Object
+        """
+
+        return (self.__str__())
 
     def save(self):
         """Handles storage mechanism for BaseModel and all descendant classes
@@ -73,7 +81,7 @@ class BaseModel(object):
         """Returns the dictonary representation of the instance"""
 
         dict_repr = {}
-        dict_repr['__class__'] = self.__class__
+        dict_repr['__class__'] = self.__class__.__name__
         for key, value in self.__dict__.items():
             if isinstance(value, (dt, )):
                 dict_repr[key] = dt.isoformat(value)

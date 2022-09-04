@@ -62,7 +62,6 @@ class FileStorage(object):
         dict_repr = {}
         for id, obj in FileStorage.__objects.items():
             dict_repr[id] = obj.to_dict()
-
         with open(FileStorage.__file_path, 'w+', encoding='utf8') as file:
             json.dump(dict_repr, file)
 
