@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 File: user.py
 Author: theMaskedOtaku

@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 File: console.py
 Author: theMaskedOtaku
@@ -47,22 +48,19 @@ class HBNBCommand(cmd.Cmd):
         print("Quit command to exit the program\n")
 
     def do_EOF(self, line):
-        """
-        End Of File indicator for program, quits the program with void return\
- value
-        """
+        """End Of File indicator for program, quits the program with void
+        return value"""
+
         return True
 
     def emptyline(self):
-        """
-        Override the default behaviour of response to emptyline input
-        """
+        """Override the default behaviour of response to emptyline input"""
         pass
 
     def do_create(self, line):
         """Create an instance of class given as argument if it exists, else re\
-turn error
-        """
+turn error"""
+
         if len(line) == 0:
             print("** class name missing **")
         elif line not in HBNBCommand.class_dict:
@@ -73,8 +71,7 @@ turn error
             print(obj.id)
 
     def do_save(self, line):
-        """Save all instances of given class
-        """
+        """Save all instances of given class"""
         self.class_dict[line].save()
 
     def do_show(self, line):
@@ -126,15 +123,102 @@ turn error
 
         ln = len(line.split())
         args = line.split()
+        obj_list = []
         if ln == 0:
-            for objs in storage.all().values():
-                print(objs)
+            for obj in storage.all().values():
+                obj_list.append(obj)
+            print(obj_list)
         elif args[0] in HBNBCommand.class_dict:
             for key, obj in storage.all().items():
                 if args[0] == key.split('.')[0]:
-                    print(obj)
+                    obj_list.append(obj)
+            print(obj_list)
         else:
             print("** class doesn't exist **")
+
+    def do_update(self, line):
+        """Update object with id attribute match"""
+
+        args = line.split()
+        ln = len(args)
+
+        if ln == 0:
+            print("** class name missing **")
+        elif args[0] not in HBNBCommand.class_dict:
+            print("** class doesn't exist **")
+        elif ln == 1:
+            print("** instance id missing **")
+        elif "{}.{}".format(args[0], args[1]) not in storage.all():
+            print("** no instance found **")
+        elif ln == 2:
+            print("** attribute name missing **")
+        elif ln == 3:
+            print("** value missing **")
+        elif ln >= 4:
+            key = "{}.{}".format(args[0], args[1])
+            type_cast = type(eval(args[3]))
+            attr_value = type_cast(args[3].strip('"\''))
+            setattr(storage.all()[key], args[2], attr_value)
+            storage.all()[key].save()
+
+    def do_count(self, line):
+        """Print count of all instantiated objects"""
+        args = line.split()
+        if args[0]:
+            if args[0] in HBNBCommand.class_dict:
+                count = 0
+                for key in storage.all().keys():
+                    if args[0] == key.split('.')[0]:
+                        count += 1
+                print(count)
+            else:
+                print("** class doesn't exist **")
+
+    def default(self, line):
+        """Accepts class name followed by arguement"""
+        args = line.split('.')
+        class_arg = args[0]
+        if len(args) == 1:
+            print("*** Unknown syntax: {}".format(line))
+            return
+        try:
+            args = args[1].split('(')
+            command = args[0]
+            if command == 'all':
+                HBNBCommand.do_all(self, class_arg)
+            elif command == 'count':
+                HBNBCommand.do_count(self, class_arg)
+            elif command == 'show':
+                args = args[1].split(')')
+                id_arg = args[0]
+                id_arg = id_arg.strip("'")
+                id_arg = id_arg.strip('"')
+                arg = class_arg + ' ' + id_arg
+                HBNBCommand.do_show(self, arg)
+            elif command == 'destroy':
+                args = args[1].split(')')
+                id_arg = args[0]
+                id_arg = id_arg.strip('"')
+                id_arg = id_arg.strip("'")
+                arg = class_arg + ' ' + id_arg
+                HBNBCommand.do_destroy(self, arg)
+            elif command == 'update':
+                args = args[1].split(',')
+                id_arg = args[0].strip("'")
+                id_arg = id_arg.strip('"')
+                name_arg = args[1].strip(',')
+                val_arg = args[2]
+                name_arg = name_arg.strip(' ')
+                name_arg = name_arg.strip("'")
+                name_arg = name_arg.strip('"')
+                val_arg = val_arg.strip(' ')
+                val_arg = val_arg.strip(')')
+                arg = class_arg + ' ' + id_arg + ' ' + name_arg + ' ' + val_arg
+                HBNBCommand.do_update(self, arg)
+            else:
+                print("*** Unknown syntax: {}".format(line))
+        except IndexError:
+            print("*** Unknown syntax: {}".format(line))
 
 
 if __name__ == "__main__":

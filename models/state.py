@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 File: state.py
 Author: theMaskedOtaku

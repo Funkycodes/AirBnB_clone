@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 File: amenity.py
 Author: theMaskedOtaku
