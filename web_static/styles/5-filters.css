@@ -1,0 +1,53 @@
+.container {
+    max-width: 1000px;
+    margin-block: 30px;
+    margin-inline: auto;
+    text-align: center;
+}
+
+.filters {
+    background-color: #fff;
+    height: 70px;
+    width: 100%;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+}
+
+.filters button {
+    background-color: #FF5A5F;
+    height: 48px;
+    width: 20%;
+    border-radius: 4px;
+    font-size: 18px;
+    color: #FFFFFF;
+    float: right;
+    margin: 11px 30px;
+}
+
+button:hover {
+    opacity: 90%;
+}
+
+.filters div {
+    width: 25%;
+    height: 100%;
+    margin-block: auto;
+    float: left;
+}
+.filters h3 {
+    font-weight: 600;
+    text-align: left;
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+.filters h4 {
+    font-size: 14px;
+    font-weight: 400;
+    text-align: left;
+    margin-left: 30px;
+}
+
+.locations {
+    border-right: 1px solid #DDDDDD;
+}
