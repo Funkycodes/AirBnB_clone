@@ -11,3 +11,10 @@ body {
     font-size: 14px;
     font-family: Circular, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+.container {
+    max-width: 1000px;
+    margin-block: 30px;
+    margin-inline: auto;
+    text-align: center;
+}
+
